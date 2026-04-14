@@ -4,8 +4,33 @@ export default function TicketPage() {
   const [ticket, setTicket] = useState(null);
 
   useEffect(() => {
+    // 1. Проверяем, есть ли уже билет
+    const existingTicket = localStorage.getItem("ticket");
+
+    if (existingTicket) {
+      setTicket(existingTicket);
+      return;
+    }
+
+    // 2. Генерируем новый билет
     const randomNumber = Math.floor(100000 + Math.random() * 900000);
-    setTicket(`LFT-${randomNumber}`);
+    const newTicket = `LFT-${randomNumber}`;
+
+    // 3. Сохраняем в localStorage
+    localStorage.setItem("ticket", newTicket);
+    setTicket(newTicket);
+
+    // 4. Отправляем в базу (ОДИН раз)
+    fetch("/api/save-ticket", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ticket: newTicket }),
+    }).catch(() => {
+      // если ошибка — просто игнорируем (не ломаем UX)
+    });
+
   }, []);
 
   return (
@@ -17,9 +42,7 @@ export default function TicketPage() {
         alignItems: "center",
         background: "black",
         color: "white",
-        padding: "20px",
         textAlign: "center",
-        margin: 0,
         fontFamily: "Arial, sans-serif",
       }}
     >
@@ -49,6 +72,10 @@ export default function TicketPage() {
           Сохраните этот номер.
           <br />
           Он участвует в розыгрыше портрета.
+        </p>
+
+        <p style={{ marginTop: "20px", fontSize: "12px", opacity: 0.4 }}>
+          Номер билета сохраняется только в вашем браузере.
         </p>
       </div>
 
