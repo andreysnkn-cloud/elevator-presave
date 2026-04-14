@@ -33,71 +33,94 @@ export default function TicketPage() {
 
   }, []);
 
-  return (
-    <main
+ return (
+  <main
+    style={{
+      minHeight: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      background: "black",
+      color: "white",
+      fontFamily: "monospace",
+    }}
+  >
+    <div
       style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "black",
-        color: "white",
-        textAlign: "center",
-        fontFamily: "Arial, sans-serif",
+        width: "320px",
+        padding: "24px",
+        border: "1px solid rgba(255,255,255,0.2)",
+        borderRadius: "12px",
+        background: "rgba(255,255,255,0.03)",
+        backdropFilter: "blur(8px)",
+        animation: "fadeIn 1.5s ease forwards",
+        opacity: 0,
       }}
     >
-      <div
-        style={{
-          maxWidth: "500px",
-          border: "1px solid rgba(255,255,255,0.2)",
-          padding: "30px",
-          borderRadius: "12px",
-          animation: "fadeIn 1.5s ease forwards",
-          opacity: 0,
-        }}
-      >
-        <h2 style={{ marginBottom: "20px" }}>Ваш билет</h2>
-
-        <div
-          style={{
-            fontSize: "32px",
-            letterSpacing: "4px",
-            marginBottom: "20px",
-          }}
-        >
-          {ticket || "..."}
-        </div>
-
-        <p style={{ opacity: 0.7 }}>
-          Сохраните этот номер.
-          <br />
-          Он участвует в розыгрыше портрета.
-        </p>
-
-        <p style={{ marginTop: "20px", fontSize: "12px", opacity: 0.4 }}>
-          Номер билета сохраняется только в вашем браузере.
-        </p>
+      <div style={{ fontSize: "12px", opacity: 0.6 }}>
+        СИСТЕМА IDST
       </div>
 
-      <style jsx global>{`
-        html, body, #__next {
-          margin: 0;
-          padding: 0;
-          min-height: 100%;
-          background: black;
-        }
+      <div style={{ fontSize: "18px", marginBottom: "16px" }}>
+        Посадочный талон
+      </div>
 
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+      <div style={{ fontSize: "12px", opacity: 0.6 }}>
+        ПАССАЖИР: ЗАРЕГИСТРИРОВАН
+      </div>
+
+      <div style={{ fontSize: "12px", opacity: 0.6 }}>
+        МАРШРУТ: МУЗЫКА ДЛЯ ЛИФТА
+      </div>
+
+      <div style={{ fontSize: "12px", opacity: 0.6, marginBottom: "20px" }}>
+        СТАТУС: ПОДТВЕРЖДЕН
+      </div>
+
+      <div
+        style={{
+          fontSize: "20px",
+          letterSpacing: "2px",
+          marginBottom: "20px",
+        }}
+      >
+        {ticket || "..."}
+      </div>
+
+      <div style={{ fontSize: "11px", opacity: 0.4 }}>
+        Посадка начнется после релиза
+      </div>
+
+      <button
+        style={{
+          marginTop: "20px",
+          width: "100%",
+          padding: "10px",
+          background: "white",
+          color: "black",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer",
+        }}
+        onClick={() => {
+          window.print();
+        }}
+      >
+        Сохранить билет
+      </button>
+    </div>
+
+    <style jsx global>{`
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-      `}</style>
-    </main>
-  );
-}
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    `}</style>
+  </main>
+);
