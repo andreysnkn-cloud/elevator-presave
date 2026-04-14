@@ -14,7 +14,7 @@ export default function TicketPage() {
 
     // 2. Генерируем новый билет
     const randomNumber = Math.floor(100000 + Math.random() * 900000);
-    const newTicket = `LFT-${randomNumber}`;
+    const newTicket = `idst-${randomNumber}`;
 
     // 3. Сохраняем в localStorage
     localStorage.setItem("ticket", newTicket);
