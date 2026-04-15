@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+
+# Test coverage
+coverage/
+
+# Logs and runtime data
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Environment files (secrets)
+.env
+.env.*
+!.env.example
+
+# Deployment/platform
+.vercel/
+
+# TypeScript cache
+*.tsbuildinfo
+next-env.d.ts
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Keys/certs
+*.pem

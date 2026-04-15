@@ -1,53 +1,60 @@
 export default function Home() {
   return (
     <main
+      className="home-page"
       style={{
         minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: "black",
         color: "white",
         padding: "20px",
         textAlign: "center",
         margin: 0,
-        fontFamily: "Arial, sans-serif",
+        fontFamily: "monospace",
       }}
     >
       <div
         style={{
-          maxWidth: "500px",
-          border: "1px solid rgba(255,255,255,0.2)",
-          padding: "30px",
+          position: "relative",
+          containerType: "inline-size",
+          width: "min(94vw, calc(140vh * 9 / 16), 1080px)",
+          aspectRatio: "9 / 16",
           borderRadius: "12px",
-          backdropFilter: "blur(10px)",
+          overflow: "hidden",
           animation: "fadeIn 1.5s ease forwards",
           opacity: 0,
         }}
       >
-        <h1 style={{ marginBottom: "20px", fontSize: "28px" }}>
-          Музыка для лифта
-        </h1>
-
-        <p style={{ marginBottom: "20px", opacity: 0.8 }}>
-          Благодарим за бронирование музыкального маршрута.
-        </p>
-
-        <p style={{ marginBottom: "30px", opacity: 0.6 }}>
-          Ваше внимание зафиксировано системой.
-          <br />
-          Пассажирам с активным пресейвом доступна портретная лотерея.
-        </p>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            background: "rgba(0, 0, 0, 0.65)",
+            display: "block",
+          }}
+        >
+          <source src="/images/prospect.webm" type="video/webm" />
+        </video>
 
         <button
+          className="gold-button"
           style={{
-            padding: "12px 24px",
-            background: "white",
-            color: "black",
-            border: "none",
-            borderRadius: "8px",
+            position: "absolute",
+            left: "50%",
+            bottom: "1.3%",
+            transform: "translateX(-50%)",
+            minWidth: "30%",
+            padding: "clamp(8px, 1.2cqi, 16px) clamp(14px, 2.4cqi, 30px)",
+            borderRadius: "clamp(6px, 0.8cqi, 12px)",
             cursor: "pointer",
-            fontSize: "16px",
+            fontSize: "clamp(6px, 4cqi, 20px)",
+            fontFamily: "bahnschrift, sans-serif",
           }}
           onClick={() => {
             window.location.href = "/ticket";
@@ -63,6 +70,21 @@ export default function Home() {
           padding: 0;
           min-height: 100%;
           background: black;
+        }
+
+        .home-page {
+          background-image: url('/images/background.png');
+          background-color: rgba(0, 0, 0, 0.7);
+          background-blend-mode: darken;
+          background-repeat: repeat;
+          background-position: left top;
+          background-size: 100% auto;
+        }
+
+        @media (orientation: landscape) {
+          .home-page {
+            background-size: 50% auto;
+          }
         }
 
         @keyframes fadeIn {
