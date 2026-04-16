@@ -1,0 +1,71 @@
+.brush-reveal {
+  position: relative;
+  isolation: isolate;
+}
+
+.brush-reveal::before,
+.brush-reveal::after {
+  content: "";
+  position: absolute;
+  inset: -18%;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      120deg,
+      transparent 0 18%,
+      rgba(255, 255, 255, 0.85) 24%,
+      transparent 34%,
+      rgba(255, 255, 255, 0.35) 40%,
+      transparent 54%,
+      rgba(255, 255, 255, 0.7) 61%,
+      transparent 74%,
+      rgba(255, 255, 255, 0.25) 80%,
+      transparent 100%
+    ),
+    radial-gradient(circle at 18% 42%, rgba(255, 255, 255, 0.95) 0 6%, transparent 11%),
+    radial-gradient(circle at 40% 58%, rgba(255, 255, 255, 0.85) 0 7%, transparent 13%),
+    radial-gradient(circle at 63% 38%, rgba(255, 255, 255, 0.9) 0 6%, transparent 12%),
+    radial-gradient(circle at 82% 56%, rgba(255, 255, 255, 0.85) 0 7%, transparent 13%);
+  background-repeat: no-repeat;
+  mix-blend-mode: screen;
+  filter: blur(12px) saturate(1.15);
+  opacity: 0;
+  transform: translateX(-135%) skewX(-20deg);
+  animation: brush-stroke-sweep 1.45s cubic-bezier(0.22, 0.72, 0.28, 1) forwards;
+}
+
+.brush-reveal::after {
+  animation-delay: 0.12s;
+  opacity: 0.78;
+  filter: blur(7px) saturate(1.05);
+  transform: translateX(-170%) skewX(-24deg) scale(0.96);
+}
+
+.brush-reveal.ticket-reveal::before,
+.brush-reveal.ticket-reveal::after {
+  inset: 0;
+  mask-image: url('/images/ticket3.png');
+  mask-size: 100% 100%;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url('/images/ticket3.png');
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+}
+
+@keyframes brush-stroke-sweep {
+  0% {
+    opacity: 0.95;
+    transform: translateX(-140%) skewX(-20deg) scaleX(0.86);
+  }
+
+  45% {
+    opacity: 0.82;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(140%) skewX(-20deg) scaleX(1.08);
+  }
+}

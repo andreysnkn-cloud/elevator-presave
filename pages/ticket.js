@@ -42,8 +42,18 @@ export default function TicketPage() {
       setIsDownloading(true);
 
       const canvas = await html2canvas(ticketRef.current, {
-        backgroundColor: "#000000",
+        backgroundColor: null,
         scale: 2,
+        useCORS: true,
+        onclone: (clonedDoc) => {
+          const clonedTicket = clonedDoc.getElementById("ticket-capture");
+
+          if (clonedTicket) {
+            clonedTicket.style.animation = "none";
+            clonedTicket.style.opacity = "1";
+            clonedTicket.style.transform = "translateX(0)";
+          }
+        },
       });
 
       const imageUrl = canvas.toDataURL("image/png");
@@ -81,9 +91,11 @@ export default function TicketPage() {
         fontFamily: "monospace",
         padding: "20px",
         boxSizing: "border-box",
+        overflowX: "hidden",
       }}
     >
       <div
+        id="ticket-capture"
         ref={ticketRef}
         style={{
           position: "relative",
@@ -93,15 +105,21 @@ export default function TicketPage() {
           maxWidth: "92vw",
           maxHeight: "52vw",
           aspectRatio: "16 / 9",
-          backgroundImage: "url('/images/ticket3.png')",
-          backgroundSize: "100% 100%",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          animation: "fadeIn 1.5s ease forwards",
+          animation: "ticketSlideIn 1.2s cubic-bezier(0.2, 0.9, 0.24, 1) forwards",
           opacity: 0,
           overflow: "hidden",
         }}
       >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: "url('/images/ticket3.png')",
+            backgroundSize: "100% 100%",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
       
         <div
           style={{
@@ -118,31 +136,55 @@ export default function TicketPage() {
             wordBreak: "break-word",
             textAlign: "center",
             textShadow: "0 0 12px rgba(255, 255, 255, 0.56)",
+            maskImage: "url('/images/scratches2.png')",
+            maskSize: "cover",
+            maskPosition: "center",
+            WebkitMaskImage: "url('/images/scratches2.png')",
+            WebkitMaskSize: "cover",
+            WebkitMaskPosition: "center",
           }}
         >
           {ticket || "..."}
         </div>
+        </div>
       </div>
 
-      <button
-        className="gold-button"
+      <div
         style={{
           width: "min(420px, 92vw)",
-          padding: "12px",
-          borderRadius: "6px",
-          cursor: "pointer",
-          opacity: isDownloading ? 0.7 : 1,
-          fontFamily: "monospace",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
         }}
-        onClick={handleDownloadTicket}
-        disabled={isDownloading}
       >
-        {isDownloading ? "Сохранение..." : "Скачать билет"}
-      </button>
+        <button
+          className="gold-button ticket-button"
+          style={{
+            alignSelf: "center",
+            width: "80%",
+            cursor: "pointer",
+            opacity: isDownloading ? 0.7 : 1,
+          }}
+          onClick={handleDownloadTicket}
+          disabled={isDownloading}
+        >
+          {isDownloading ? "Сохранение..." : "Оторвать талончик"}
+        </button>
 
-      <p style={{ margin: 0, fontSize: "12px", opacity: 0.35, textAlign: "center" }}>
-        Номер билета сохраняется только в вашем браузере.
-      </p>
+        <button
+          className="gold-button ticket-button"
+          style={{
+            width: "80%",
+            cursor: "pointer",
+            alignSelf: "center",
+          }}
+          onClick={() => {
+            window.location.href = "https://t.me/idstband";
+          }}
+        >
+          Перейти в Telegram
+        </button>
+      </div>
 
       <style jsx global>{`
         html,
@@ -151,6 +193,7 @@ export default function TicketPage() {
           margin: 0;
           padding: 0;
           min-height: 100%;
+          overflow-x: hidden;
           background: black;
         }
 
@@ -169,14 +212,14 @@ export default function TicketPage() {
           }
         }
 
-        @keyframes fadeIn {
+        @keyframes ticketSlideIn {
           from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateX(-24vw);
           }
           to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateX(0);
           }
         }
       `}</style>

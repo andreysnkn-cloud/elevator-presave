@@ -18,7 +18,7 @@ export default function Home() {
         style={{
           position: "relative",
           containerType: "inline-size",
-          width: "min(94vw, calc(140vh * 9 / 16), 1080px)",
+          width: "min(94vw, calc(150vh * 9 / 16), 1080px)",
           aspectRatio: "9 / 16",
           borderRadius: "12px",
           overflow: "hidden",
@@ -26,35 +26,43 @@ export default function Home() {
           opacity: 0,
         }}
       >
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
+        <div
+        className="brush-reveal"
           style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            background: "rgba(0, 0, 0, 0.65)",
-            display: "block",
+            position: "absolute",
+            inset: 0,
           }}
         >
-          <source src="/images/prospect.webm" type="video/webm" />
-        </video>
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              background: "rgba(0, 0, 0, 0.65)",
+              display: "block",
+            }}
+          >
+            <source src="/images/prospect.webm" type="video/webm" />
+          </video>
+        </div>
 
         <button
           className="gold-button"
           style={{
             position: "absolute",
+            zIndex: 2,
             left: "50%",
             bottom: "1.3%",
             transform: "translateX(-50%)",
             minWidth: "30%",
-            padding: "clamp(8px, 1.2cqi, 16px) clamp(14px, 2.4cqi, 30px)",
-            borderRadius: "clamp(6px, 0.8cqi, 12px)",
+            maxHeight: "12%",
             cursor: "pointer",
-            fontSize: "clamp(6px, 4cqi, 20px)",
-            fontFamily: "bahnschrift, sans-serif",
+            fontSize: "3cqi",
+            boxShadow: "0 0 24px rgba(214, 117, 6, 0.56)",
           }}
           onClick={() => {
             window.location.href = "/ticket";
