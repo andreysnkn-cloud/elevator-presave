@@ -1,4 +1,14 @@
+import { useEffect } from "react";
+
 export default function Home() {
+  useEffect(() => {
+    const ticketImage = new Image();
+    ticketImage.src = "/images/ticket3.png";
+
+    const ticketImage2 = new Image();
+    ticketImage2.src = "/images/scratches2.png";
+  }, []);
+
   return (
     <main
       className="home-page"

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import html2canvas from "html2canvas";
 
 export default function TicketPage() {
   const [ticket, setTicket] = useState(null);
@@ -7,6 +6,60 @@ export default function TicketPage() {
   const ticketRef = useRef(null);
   const frameWidth = 720;
   const frameHeight = 405;
+
+  const loadImage = (src) =>
+    new Promise((resolve) => {
+      const image = new Image();
+      image.crossOrigin = "anonymous";
+      image.onload = () => resolve(image);
+      image.onerror = () => resolve(null);
+      image.src = src;
+    });
+
+  const renderMaskedText = (context, text, canvasWidth, canvasHeight) => {
+    const scratchImage = new Image();
+    scratchImage.crossOrigin = "anonymous";
+    scratchImage.src = "/images/scratches2.png";
+
+    return new Promise((resolve) => {
+      scratchImage.onload = () => {
+        const textCanvas = document.createElement("canvas");
+        textCanvas.width = canvasWidth;
+        textCanvas.height = canvasHeight;
+        const textContext = textCanvas.getContext("2d");
+
+        if (!textContext) {
+          resolve();
+          return;
+        }
+
+        textContext.clearRect(0, 0, canvasWidth, canvasHeight);
+        textContext.fillStyle = "rgb(66, 43, 1)";
+        textContext.textAlign = "center";
+        textContext.textBaseline = "middle";
+        textContext.font = `bold ${Math.round(canvasWidth * 0.042)}px bahnschrift, monospace, sans-serif`;
+        textContext.shadowColor = "rgba(255, 255, 255, 0.56)";
+        textContext.fillText(text || "...", canvasWidth / 2, canvasHeight * 0.68);
+
+        textContext.globalCompositeOperation = "destination-in";
+        textContext.drawImage(scratchImage, 0, 0, canvasWidth, canvasHeight);
+        textContext.globalCompositeOperation = "source-over";
+
+        context.drawImage(textCanvas, 0, 0);
+        resolve();
+      };
+
+      scratchImage.onerror = () => {
+        context.fillStyle = "rgba(66, 43, 1, 0.95)";
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.font = `bold ${Math.round(canvasWidth * 0.042)}px bahnschrift, monospace, sans-serif`;
+        context.shadowColor = "rgba(255, 255, 255, 0.56)";
+        context.fillText(text || "...", canvasWidth / 2, canvasHeight * 0.62);
+        resolve();
+      };
+    });
+  };
 
   useEffect(() => {
     const existingTicket = localStorage.getItem("ticket");
@@ -34,45 +87,43 @@ export default function TicketPage() {
   }, []);
 
   const handleDownloadTicket = async () => {
-    if (!ticketRef.current || isDownloading) {
+    if (isDownloading) {
       return;
     }
 
     try {
       setIsDownloading(true);
 
-      const canvas = await html2canvas(ticketRef.current, {
-        backgroundColor: null,
-        scale: 2,
-        useCORS: true,
-        onclone: (clonedDoc) => {
-          const clonedTicket = clonedDoc.getElementById("ticket-capture");
-          const clonedTicketArt = clonedDoc.getElementById("ticket-art");
-          const clonedTicketCode = clonedDoc.getElementById("ticket-code");
+      const ticketImage = await loadImage("/images/ticket3.png");
 
-          if (clonedTicket) {
-            clonedTicket.style.animation = "none";
-            clonedTicket.style.opacity = "1";
-          }
+      if (!ticketImage) {
+        return;
+      }
 
-          if (clonedTicketArt) {
-            clonedTicketArt.classList.remove("brush-reveal");
-          }
+      const canvas = document.createElement("canvas");
+      canvas.width = ticketImage.naturalWidth || 1920;
+      canvas.height = ticketImage.naturalHeight || 1080;
 
-          if (clonedTicketCode) {
-            clonedTicketCode.style.maskImage = "url('/images/scratches2.png')";
-            clonedTicketCode.style.maskSize = "cover";
-            clonedTicketCode.style.maskPosition = "center";
-            clonedTicketCode.style.maskRepeat = "no-repeat";
-            clonedTicketCode.style.WebkitMaskImage = "url('/images/scratches2.png')";
-            clonedTicketCode.style.WebkitMaskSize = "cover";
-            clonedTicketCode.style.WebkitMaskPosition = "center";
-            clonedTicketCode.style.WebkitMaskRepeat = "no-repeat";
-          }
-        },
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        return;
+      }
+
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(ticketImage, 0, 0, canvas.width, canvas.height);
+
+      await renderMaskedText(context, ticket, canvas.width, canvas.height);
+
+      const blob = await new Promise((resolve) => {
+        canvas.toBlob(resolve, "image/png", 1);
       });
 
-      const imageUrl = canvas.toDataURL("image/png");
+      if (!blob) {
+        return;
+      }
+
+      const imageUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       const safeTicket = (ticket || "lottery-ticket")
         .replace(/[^a-z0-9-]/gi, "-")
@@ -88,6 +139,10 @@ export default function TicketPage() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
+      setTimeout(() => {
+        URL.revokeObjectURL(imageUrl);
+      }, 2000);
     } finally {
       setIsDownloading(false);
     }
@@ -132,6 +187,7 @@ export default function TicketPage() {
           style={{
             position: "absolute",
             inset: 0,
+            pointerEvents: "none",
             backgroundImage: "url('/images/ticket3.png')",
             backgroundSize: "100% 100%",
             backgroundPosition: "center",
@@ -147,14 +203,14 @@ export default function TicketPage() {
             left: "50%",
             width: "86%",
             transform: "translateX(-50%)",
-            color: "rgba(66, 43, 1, 0.95)",
+            color: "rgba(66, 43, 1, 1)",
             fontFamily: "bahnschrift, monospace, sans-serif",
             fontSize: "clamp(16px, 5cqi, 48px)",
             letterSpacing: "clamp(1px, 0.45cqi, 3px)",
             fontWeight: "bold",
             wordBreak: "break-word",
             textAlign: "center",
-            textShadow: "0 0 12px rgba(255, 255, 255, 0.56)",
+            textShadow: "0 0 16px rgba(255, 255, 255, 0.9)",
             maskImage: "url('/images/scratches2.png')",
             maskSize: "cover",
             maskPosition: "center",
