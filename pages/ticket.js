@@ -100,7 +100,7 @@ export default function TicketPage() {
     try {
       setIsDownloading(true);
 
-      const ticketImage = await loadImage("/images/ticket3.png");
+      const ticketImage = await loadImage("/images/ticket4.png");
 
       if (!ticketImage) {
         return;
