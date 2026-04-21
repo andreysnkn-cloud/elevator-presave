@@ -14,6 +14,6 @@ run:
   scriptName: null
   scriptArguments: null
   nodeArguments: null
-  command: npx next start -p 3000 -H 0.0.0.0
+  command: npm run build && npx next start -p 3000 -H 0.0.0.0
   containerPort: 3000
   servicePort: 80
