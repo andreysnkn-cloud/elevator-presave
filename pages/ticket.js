@@ -194,7 +194,7 @@ export default function TicketPage() {
             position: "absolute",
             inset: 0,
             pointerEvents: "none",
-            backgroundImage: "url('/images/ticket3.png')",
+            backgroundImage: "url('/images/ticket4.png')",
             backgroundSize: "100% 100%",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
