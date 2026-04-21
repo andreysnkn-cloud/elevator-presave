@@ -5,10 +5,7 @@ meta:
     name: npm
     version: 20
 build:
-  skip: false
-  commands:
-    - npm install                
-    - npm run build              
+  skip: false           
   additionalCommands: null
   artifacts:
     '*': /
